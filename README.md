@@ -1,3 +1,5 @@
+<p align="center"><img src="logo.jpg" alt="RustGuard" width="180"/></p>
+
 # RustGuard — UEBA 内部数据泄露异常检测系统（v0.2）
 
 > 纯 Rust + smartcore（DBSCAN）+ **手写 Isolation Forest**，双引擎集成，单文件架构。
@@ -44,13 +46,13 @@ cargo run -- --fusion vote                   # 切换融合策略（and/or/vote/
 | 压力·UNKNOWN 池 | U1 突发delete **73.3%**；U2 周末 0%→**加 is_weekend 特征后 100%**（特征迭代对照实验）；U3 慢速蚕食 0%（静态基线边界，已列改进路线）；U4 群体微小 0%（低于单事件统计显著性，需跨账号特征） |
 | 敏感性（eps 0.3~1.2 × z 2.5~3.5，12 格） | 全部 12 格准确率 100%；检出 80~92%，随 eps 增大缓降，无悬崖 |
 | 检测器选型（消融） | 混合 99.2% vs 手写 IF（分位校准）56.6% vs 固定阈值 IF 52% → 默认策略 HYBRID-PRIMARY，IF 旁路交叉验证 |
-| 性能 | 500 条 / 5 用户 release **~15-23ms**；debug ~110ms |
+| 性能 | 500 条 / 5 用户 release **~15-23ms**（接通电源实测；电池模式 Windows 降频约 2 倍）；debug ~110ms |
 
 > 说明：v0.2 将正常文件体量改为对数正态长尾（更真实）并引入两级证据门后，准确率显著抬升、
 > 召回轻微让渡给"统计上确实无法区分"的序列头部样本——这是精确率/召回率曲线上主动选择的
-> 工作点，不是能力退化；需要更高召回可用 `--fusion or` 现场对比。
+> 工作点，不是能力退化；需要更高召回可用 `--fusion or` 切换对比。
 
-## 答辩要点（FAQ）
+## 设计决策问答（FAQ）
 
 1. **smartcore 有 IsolationForest 吗？** 没有（v0.4.10 源码核查：cluster 模块仅 kmeans/dbscan/agglomerative）。我们按论文原理手写（树构建+路径长度+c(n) 修正），并保留 DBSCAN 混合器作为第二路异构引擎做消融对比——比"调库"更能证明算法理解深度。
 2. **是不是为测试数据写死的？** 判定路径无任何场景规则（场景词汇只存在于生成器）；20 seed 稳定性中 seed3 曾漏 1 条（96%）——写死的实现不会失手；UNKNOWN 池里 U3 明确 0% 召回并给出根因（单维缓变+静态基线），这是"敢报忧"的证据而非缺陷。
@@ -71,7 +73,7 @@ cargo run -- --fusion vote                   # 切换融合策略（and/or/vote/
 rustguard/
 ├── .cargo/config.toml     # rsproxy 镜像（国内网络开箱即用）
 ├── Cargo.toml             # 7 依赖
-├── src/main.rs            # 单文件 ~1200 行，六模块 + 6 测试
+├── src/main.rs            # 单文件 ~2200 行，六模块 + 三实验模式 + 6 测试
 ├── report.json            # 运行产物
 └── README.md              # 本文档
 ```

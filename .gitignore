@@ -1,2 +1,16 @@
-# 项目排除路径
+# 构建产物
 /target/
+
+# IDE 配置
+/.idea/
+
+# 运行产物（程序每次运行会重新生成）
+report.json
+
+# 项目文档（本地保留，不随代码仓库分发）
+/RustGuard_项目方案.docx
+/RustGuard_项目方案.pdf
+
+# 备份与 Office 临时文件
+*_原版备份*
+~$*
