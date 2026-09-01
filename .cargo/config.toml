@@ -1,0 +1,18 @@
+# Cargo 镜像源配置：使用 rsproxy（字节跳动维护的 crates.io 国内镜像）
+# 由于本机网络环境无法直连 crates.io / static.crates.io，故配置镜像加速并保证可拉取依赖。
+# 如需改回官方源，删除本文件即可。
+
+[source.crates-io]
+replace-with = "rsproxy-sparse"
+
+[source.rsproxy]
+registry = "https://rsproxy.cn/crates.io-index"
+
+[source.rsproxy-sparse]
+registry = "sparse+https://rsproxy.cn/index/"
+
+[registries.rsproxy]
+index = "https://rsproxy.cn/crates.io-index"
+
+[net]
+git-fetch-with-cli = true

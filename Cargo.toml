@@ -1,0 +1,29 @@
+[package]
+name = "rustguard"
+version = "0.1.0"
+edition = "2021"
+description = "RustGuard - 基于机器学习的 UEBA（用户与实体行为分析）内部数据泄露异常检测系统"
+license = "MIT"
+
+[[bin]]
+name = "rustguard"
+path = "src/main.rs"
+
+[dependencies]
+# 机器学习库（纯 Rust 实现，无外部 C 依赖）
+smartcore = "0.4"
+# 序列化 / 反序列化
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+# 时间处理（需要 serde 特性以便对 DateTime 序列化）
+chrono = { version = "0.4", features = ["serde"] }
+# 随机数
+rand = "0.8"
+# 终端彩色输出
+colored = "2"
+# 统一错误处理
+anyhow = "1.0"
+
+# 发布模式下开启优化，保证性能基准结果好看
+[profile.release]
+opt-level = 3
